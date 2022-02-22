@@ -11,8 +11,8 @@ RUN mkdir /output
 RUN chmod 777 /output
 
 # To upgrade, change this link here and rebuild the image. This can probably be tweaked to always pull latest.
-# RUN wget -O /usr/share/cura/Ultimaker_Cura.AppImage https://software.ultimaker.com/cura/Ultimaker_Cura-4.6.1.AppImage
-RUN wget -O /usr/share/cura/Ultimaker_Cura.AppImage https://storage.googleapis.com/software.ultimaker.com/cura/Ultimaker_Cura-4.12.0.AppImage
+# OLD METHOD STATIC URL RUN wget -O /usr/share/cura/Ultimaker_Cura.AppImage https://storage.googleapis.com/software.ultimaker.com/cura/Ultimaker_Cura-4.12.0.AppImage
+RUN wget -O /usr/share/cura/Ultimaker_Cura.AppImage $(curl -s https://api.github.com/repos/Ultimaker/Cura/releases | grep browser_download_url | grep '.AppImage' | head -n 1 | cut -d '"' -f 4)
 RUN chmod a+x /usr/share/cura/Ultimaker_Cura.AppImage
 
 # Copy the start script.
@@ -30,6 +30,9 @@ LABEL \
       org.label-schema.version="unknown" \
       org.label-schema.vcs-url="https://github.com/8layer8/docker-cura" \
       org.label-schema.schema-version="1.0"
+      
+# Set the window name so full screen plugins (like Thingibrowser) can be closed
+RUN sed-patch 's/<application type="normal">/<application type="normal" title="Ultimaker Cura">/' /etc/xdg/openbox/rc.xml
       
 # Set the name of the application.
 ENV APP_NAME="Cura3D"
