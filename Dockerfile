@@ -1,5 +1,5 @@
 # Pull base image.
-FROM jlesage/baseimage-gui:debian-10
+FROM jlesage/baseimage-gui:debian-11
 
 # Install xterm.
 RUN add-pkg xterm sudo wget curl sed fuse
@@ -35,7 +35,11 @@ LABEL \
 RUN sed-patch 's/<application type="normal">/<application type="normal" title="Ultimaker Cura">/' /etc/xdg/openbox/rc.xml
       
 # Set the name of the application.
+
 ENV APP_NAME="Cura3D"
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES all
+ENV DEBIAN_FRONTEND noninteractive
 
 # Testing:
 # docker rm docker-cura-test
